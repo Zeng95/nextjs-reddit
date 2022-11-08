@@ -1,20 +1,24 @@
-import { AppDataSource } from "./data-source"
-import { User } from "./entities/User"
+import express from "express";
+import morgan from "morgan";
+import { AppDataSource } from "./data-source";
 
-AppDataSource.initialize().then(async () => {
+const app = express();
+const port = 3000;
 
-  console.log("Inserting a new user into the database...")
-  const user = new User()
-  user.firstName = "Timber"
-  user.lastName = "Saw"
-  user.age = 25
-  await AppDataSource.manager.save(user)
-  console.log("Saved a new user with id: " + user.id)
+app.use(express.json());
+app.use(morgan("dev"));
 
-  console.log("Loading users from the database...")
-  const users = await AppDataSource.manager.find(User)
-  console.log("Loaded users: ", users)
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
-  console.log("Here you can setup and run express / fastify / any other framework.")
+app.listen(port, async () => {
+  console.log(`Server listening on port ${port}`);
 
-}).catch(error => console.log(error))
+  try {
+    await AppDataSource.initialize()
+    console.log("Database initialized and connected!");
+  } catch (error) {
+    console.error(error)
+  }
+});
