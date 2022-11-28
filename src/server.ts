@@ -13,7 +13,7 @@ app.get('/', (_, res) => res.send('Hello World'));
 app.use('/api/auth', authRoutes);
 
 app.listen(port, async () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 
   try {
     await AppDataSource.initialize();
