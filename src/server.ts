@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import { AppDataSource } from './data-source';
+import trim from './middleware/trim';
 import authRoutes from './routes/auth';
 
 const app = express();
@@ -8,6 +9,7 @@ const port = 3000;
 
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(trim);
 
 app.get('/', (_, res) => res.send('Hello World'));
 app.use('/api/auth', authRoutes);
