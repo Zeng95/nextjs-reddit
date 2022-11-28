@@ -5,7 +5,7 @@ import trim from './middleware/trim';
 import authRoutes from './routes/auth';
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(express.json());
 app.use(morgan('dev'));
