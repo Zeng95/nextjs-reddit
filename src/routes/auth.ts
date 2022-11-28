@@ -14,15 +14,12 @@ const register = async (req: Request, res: Response) => {
     let errors: any = {};
     const emailUser = await User.findOne({ where: { email } });
     const usernameUser = await User.findOne({ where: { username } });
-
     if (emailUser) {
       errors.email = 'Email is already taken';
     }
-
     if (usernameUser) {
       errors.username = 'Username is already taken';
     }
-
     if (Object.keys(errors).length > 0) {
       return res.status(400).json(errors);
     }
@@ -30,11 +27,9 @@ const register = async (req: Request, res: Response) => {
     // TODO: Create the user
     const user = new User({ email, username, password });
     errors = await validate(user);
-
     if (errors.length > 0) {
       return res.status(400).json(errors);
     }
-
     await user.save();
 
     // TODO: Return the user
