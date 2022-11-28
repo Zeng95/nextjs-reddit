@@ -11,24 +11,24 @@ const register = async (req: Request, res: Response) => {
 
   try {
     // TODO: Validate data
-    let errors: any = {};
+    const emailOrUsernameErrors: { email?: string; username?: string } = {};
     const emailUser = await User.findOne({ where: { email } });
     const usernameUser = await User.findOne({ where: { username } });
     if (emailUser) {
-      errors.email = 'Email is already taken';
+      emailOrUsernameErrors.email = 'Email is already taken';
     }
     if (usernameUser) {
-      errors.username = 'Username is already taken';
+      emailOrUsernameErrors.username = 'Username is already taken';
     }
-    if (Object.keys(errors).length > 0) {
-      return res.status(400).json(errors);
+    if (Object.keys(emailOrUsernameErrors).length > 0) {
+      return res.status(400).json(emailOrUsernameErrors);
     }
 
     // TODO: Create the user
     const user = new User({ email, username, password });
-    errors = await validate(user);
-    if (errors.length > 0) {
-      return res.status(400).json(errors);
+    const validationErrors = await validate(user);
+    if (validationErrors.length > 0) {
+      return res.status(400).json(validationErrors);
     }
     await user.save();
 

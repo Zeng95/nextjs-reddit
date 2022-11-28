@@ -1,6 +1,9 @@
+import bcrypt from 'bcrypt';
+import { Exclude, instanceToPlain } from 'class-transformer';
 import { IsEmail, Length } from 'class-validator';
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -16,6 +19,7 @@ export class User extends BaseEntity {
     Object.assign(this, user);
   }
 
+  @Exclude()
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,6 +33,7 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   username: string;
 
+  @Exclude()
   @Length(6, 255)
   @Column()
   password: string;
@@ -38,4 +43,13 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 6);
+  }
+
+  toJSON() {
+    return instanceToPlain(this);
+  }
 }
